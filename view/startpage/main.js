@@ -27,5 +27,21 @@ function requestHandler(xhr) {
     var url = "/patch";
     xhr.open("PATCH", url, true);
     xhr.setRequestHeader("Content-type", "application/json");
-    // TODO
+    xhr.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+            var decoded_response = JSON.parse(this.responseText);
+            var position = decoded_response["Position"];
+            definePosition(position);
+        }
+    };
+}
+
+function definePosition(position) {
+    if (position === "admin") {
+        console.log("This is admin");
+    } else if (position === "student") {
+        console.log("This is student");
+    } else if (position === "instructor") {
+        console.log("This is instructor");
+    }
 }

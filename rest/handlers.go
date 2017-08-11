@@ -15,11 +15,11 @@ func RunDynamicServer() {
 
 	router.HandleFunc("/patch", checkCredentials).Methods("PATCH")
 
-	router.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("/home/user/GolangProjects/src/github.com/yevchuk-kostiantyn/TestKnowledge/view"))))
+	router.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("/home/user/GolangProjects/src/github.com/yevchuk-kostiantyn/TestKnowledge/view/startpage"))))
 	log.Fatal(http.ListenAndServe(":1997", router))
 }
 
-func checkCredentials(_ http.ResponseWriter, r *http.Request) {
+func checkCredentials(w http.ResponseWriter, r *http.Request) {
 	var credentials TestKnowledge.LoginCredentials
 
 	err := json.NewDecoder(r.Body).Decode(&credentials)
@@ -31,4 +31,10 @@ func checkCredentials(_ http.ResponseWriter, r *http.Request) {
 	log.Println("Username:", credentials.Username)
 	log.Println("Password:", credentials.Password)
 
+
+	if credentials.Username == "admin" && credentials.Password == "admin" {
+		var response TestKnowledge.Response
+		response.Position = "admin"
+		json.NewEncoder(w).Encode(response)
+	}
 }
