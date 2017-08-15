@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TestIO</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="main.js" async></script>
+</head>
+<body>
+    <p align="center">Welcome to TestIO</p>
+    <div class="img_container">
+        <img src="login_user.png" alt="Avatar" class="avatar">
+    </div>
+
+    <div class="container">
+        <label><br>Username</br></label>
+        <input id="username" type="text" placeholder="Email" name="uname" required>
+
+        <label><br>Password</br></label>
+        <input id="password" type="password" placeholder="Password" name="psw" required>
+        <p></p>
+        <button type="submit" onclick="getCredentials();">Login</button>
+
+        <button onclick="document.getElementById('id01').style.display='block'">Sign up</button>
+        <!-- Sign up page -->
+        <div id="id01" class="modal">
+  <span onclick="document.getElementById('id01').style.display='none'"
+        class="close" title="Close Modal">&times;</span>
+
+            <div class="modal-content animate">
+                <div class="imgcontainer">
+                    <img src="sign_up_user.png" alt="Avatar" class="avatar">
+                </div>
+
+                <div class="modal_container">
+                    <label><br>First Name</br></label>
+                    <input id="first_name" type="text" placeholder="First Name" required>
+
+                    <label><br>Last Name</br></label>
+                    <input id="last_name" type="text" placeholder="Last Name" required>
+
+                    <label><br>Email</br></label>
+                    <input id="sign_up_email" type="text" placeholder="Email" required>
+
+                    <label><br>Password</br></label>
+                    <input id="sign_up_password" type="password" placeholder="Password" name="psw" required>
+
+                    <label><br>Position</br></label>
+                    <form action="#" method="post" class="positionForm" id="positionForm">
+                        <label><input type="radio" name="position" value="student" checked /> Student</label>
+                        <label><input type="radio" name="position" value="instructor" /> Instructor</label>
+                    </form>
+                    <p></p>
+                    <button class="register"  type="submit" onclick="getSignUpInfo();">Register</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
