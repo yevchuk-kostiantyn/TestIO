@@ -34,8 +34,8 @@ function sendCredentials(username, password) {
 }
 
 function requestHandler(xhr) {
-    var url = "/patch";
-    xhr.open("PATCH", url, true);
+    var url = "/get";
+    xhr.open("GET", url, true);
     xhr.setRequestHeader("Content-type", "application/json");
     xhr.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
@@ -63,7 +63,8 @@ function getSignUpInfo() {
     var email = document.getElementById("sign_up_email").value;
     var password = document.getElementById("sign_up_password").value;
     var position = getRadioButtonValue( document.getElementById('positionForm'), 'position');
-    console.log(first_name, last_name, email, password, position);
+
+    sendNewUserInfo(first_name, last_name, email, password, position);
 }
 
 function getRadioButtonValue(form, name) {
@@ -77,4 +78,32 @@ function getRadioButtonValue(form, name) {
         }
     }
     return value;
+}
+
+function sendNewUserInfo(first_name, last_name, email, password, position) {
+    var xhr = new XMLHttpRequest();
+    requestSignUp(xhr, first_name);
+
+    var new_user_info = JSON.stringify(
+        {
+            "first_name": first_name,
+            "last_name": last_name,
+            "email": email,
+            "password": password,
+            "position": position
+        }
+    );
+    xhr.send(new_user_info);
+    console.log("New User Info to be sent:", new_user_info);
+}
+
+function requestSignUp(xhr, first_name) {
+    var url = "/signup";
+    xhr.open("PATCH", url, true);
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+            alert(first_name+", you have been successfully signed up!")
+        }
+    };
 }
