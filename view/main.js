@@ -34,13 +34,13 @@ function sendCredentials(username, password) {
 }
 
 function requestHandler(xhr) {
-    var url = "/get";
-    xhr.open("GET", url, true);
+    var url = "/login";
+    xhr.open("PATCH", url, true);
     xhr.setRequestHeader("Content-type", "application/json");
     xhr.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
-            var decoded_response = JSON.parse(this.responseText);
-            var position = decoded_response["Position"];
+            var position = JSON.parse(this.responseText);
+            console.log("Position:", position);
             definePosition(position);
         }
     };
@@ -54,6 +54,8 @@ function definePosition(position) {
         console.log("This is student");
     } else if (position === "instructor") {
         console.log("This is instructor");
+    } else {
+        console.log("Unknown position!")
     }
 }
 
