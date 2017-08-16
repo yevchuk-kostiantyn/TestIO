@@ -52,8 +52,10 @@ function definePosition(position) {
         window.location.href = "admin/index.html"
     } else if (position === "student") {
         console.log("This is student");
+        window.location.href = "student/index.html"
     } else if (position === "instructor") {
         console.log("This is instructor");
+        window.location.href = "instructor/index.html"
     } else {
         console.log("Unknown position!")
     }

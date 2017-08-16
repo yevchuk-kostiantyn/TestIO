@@ -8,7 +8,6 @@ import (
 	"github.com/yevchuk-kostiantyn/TestKnowledge"
 	"encoding/json"
 	"github.com/yevchuk-kostiantyn/TestKnowledge/DB"
-	"strings"
 )
 
 func RunDynamicServer() {
@@ -16,14 +15,14 @@ func RunDynamicServer() {
 
 	router := mux.NewRouter()
 
-	router.HandleFunc("/login", checkCredentials).Methods("PATCH")
+	router.HandleFunc("/login", checkEnteredCredentials).Methods("PATCH")
 	router.HandleFunc("/signup", getNewUser).Methods("PATCH")
 
 	router.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("/home/user/GolangProjects/src/github.com/yevchuk-kostiantyn/TestKnowledge/view"))))
 	log.Fatal(http.ListenAndServe(":1997", router))
 }
 
-func checkCredentials(w http.ResponseWriter, r *http.Request) {
+func checkEnteredCredentials(w http.ResponseWriter, r *http.Request) {
 	var credentials TestKnowledge.LoginCredentials
 
 	err := json.NewDecoder(r.Body).Decode(&credentials)
@@ -38,33 +37,18 @@ func checkCredentials(w http.ResponseWriter, r *http.Request) {
 	log.Println("Username:", entered_username)
 	log.Println("Password:", entered_password)
 
-	client, err := DB.RunDBConnection()
+	user_exists := DB.UserExists(entered_username)
+	is_password_correct := DB.IsPasswordCorrect(entered_username, entered_password)
 
-	if err != nil {
-		log.Println("DB Error 1 | RunDBConnection():", err)
-	}
-
-	user_exists, err := client.Exists(entered_username)
-
-	if err != nil {
-		log.Println("DB Error 2 | Exists():", err)
-	}
-
-	correct_password, err := client.HMGet(entered_username, "password")
-
-	if err != nil {
-		log.Println("DB Error 3 | HMGet():", err)
-	}
-
-	if user_exists || entered_password == strings.Join(correct_password, "") {
+	if user_exists && is_password_correct {
 		var response TestKnowledge.Response
-		response.Position, err = client.HMGet(entered_username, "position")
-		if err != nil {
-			log.Println("DB Error 4 | HMGet():", err)
-		}
-		response_position_string := strings.Join(response.Position, "")
-		log.Println("Position:", response_position_string)
-		json.NewEncoder(w).Encode(response_position_string)
+		response.Position = DB.GetUserPosition(entered_username)
+		log.Println("Position:", response.Position)
+		json.NewEncoder(w).Encode(response.Position)
+	} else if !user_exists {
+		log.Println("User not exists")
+	} else if !is_password_correct {
+		log.Println("Incorrect Password")
 	}
 }
 
@@ -89,38 +73,21 @@ func getNewUser(_ http.ResponseWriter, r *http.Request) {
 	log.Println("Password:", password)
 	log.Println("Position:", position)
 
-	saveToDB(firstName, lastName, email, password, position)
+	successful_save := DB.SaveNewUser(firstName, lastName, email, password, position)
+
+	if successful_save {
+		sendEmail(firstName, lastName, email, position)
+	} else {
+		log.Println("Save to DB was not successful")
+	}
 }
 
-func saveToDB(firstName string, lastName string, email string, password string, position string) {
-	client, err := DB.RunDBConnection()
-
-	if err != nil {
-		log.Println("DB Error 5 | RunDBConnection():", err)
-	}
-
-	key := email
-
-	OK, err := client.HMSet(key, "password", password, "first_name", firstName, "last_name", lastName,
-	"position", position)
-
-	if OK != "OK" {
-		log.Println("HMSet response is not OK")
-	}
-
-	if err != nil {
-		log.Println("DB Error 6 | HMSet(): ", err)
-	}
-
-	sendEmail(firstName, lastName, email, password, position)
-}
-
-func sendEmail(firstName string, lastName string, email string, password string, position string) {
+func sendEmail(firstName string, lastName string, email string, position string) {
 	from := "kostiantyn.yevchuk@nure.ua"
 	admin_password := "yewchuk97"
 
-	body := "Dear " + firstName +" " + lastName +"," + "\n" + "You were successfully signed up on TestIO." + "\n" +
-		"To login enter the email and password" +
+	body := "Dear " + firstName +" " + lastName +"," + "\n" + "You were successfully signed up on" +
+		" TestIO as " + position + "." + "\n" + "To login enter the email and password" +
 		" you used." + "\n" + "Thank you!" + "\n" + "Have a great day!" + "\n" + "TestIO Team"
 
 	msg := "From: " + from + "\r\n" +
@@ -132,5 +99,5 @@ func sendEmail(firstName string, lastName string, email string, password string,
 		return
 	}
 
-	log.Print("Email to", email, "was successfully sent")
+	log.Print("Email to ", email, " was successfully sent")
 }

@@ -22,7 +22,7 @@ type Instructor struct {
 }
 
 type Response struct {
-	Position []string
+	Position string
 }
 
 type NewUser struct {
