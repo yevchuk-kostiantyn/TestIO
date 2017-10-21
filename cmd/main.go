@@ -1,11 +1,11 @@
 package main
 
 import (
-	"log"
-	"github.com/yevchuk-kostiantyn/TestKnowledge/rest"
+	log "github.com/sirupsen/logrus"
+	"github.com/yevchuk-kostiantyn/TestIO/rest"
 )
 
 func main() {
-	log.Println("Welcome to TestIO App log!")
+	log.Infoln("Welcome to TestIO App log!")
 	rest.RunDynamicServer()
 }

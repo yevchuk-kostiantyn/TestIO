@@ -2,7 +2,7 @@ package DB
 
 import (
 	"menteslibres.net/gosexy/redis"
-	"log"
+	log "github.com/sirupsen/logrus"
 )
 
 func RunDBConnection() (*redis.Client, error) {
@@ -11,7 +11,7 @@ func RunDBConnection() (*redis.Client, error) {
 
 	err := client.Connect("127.0.0.1", 6379)
 	if err != nil {
-		log.Println("DB Error 1 | Connect(): ", err)
+		log.Errorln("DB | Connect(): ", err)
 	}
 	return client, err
 }

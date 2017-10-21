@@ -1,4 +1,4 @@
-package TestKnowledge
+package TestIO
 
 type LoginCredentials struct {
 	Username string `json:"username"`
