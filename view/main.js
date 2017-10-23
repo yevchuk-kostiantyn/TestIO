@@ -48,14 +48,14 @@ function requestHandler(xhr) {
 
 function definePosition(position) {
     if (position === "admin") {
-        console.log("This is admin");
+        //console.log("This is admin");
         window.location.href = "admin/index.html"
     } else if (position === "student") {
-        console.log("This is student");
+        //console.log("This is student");
         window.location.href = "student/index.html"
     } else if (position === "instructor") {
-        console.log("This is instructor");
-        window.location.href = "instructor/index.html"
+        //console.log("This is instructor");
+        window.location.href = "../instrucor/index.html"
     } else {
         console.log("Unknown position!")
     }

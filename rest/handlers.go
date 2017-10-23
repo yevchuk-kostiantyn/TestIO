@@ -18,11 +18,11 @@ func RunDynamicServer() {
 	router.HandleFunc("/login", checkEnteredCredentials).Methods("PATCH")
 	router.HandleFunc("/signup", getNewUser).Methods("PATCH")
 
-	router.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("/home/kostiantyn/GolangProjects/src/github.com/yevchuk-kostiantyn/TestIO/view"))))
+	router.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("/home/kostiantyn/GolangProjects/src/github.com/yevchuk-kostiantyn/TestIO/view/"))))
 
 	err := http.ListenAndServe(":1997", router)
 	if err != nil {
-		log.Errorln("ListenAndServe()")
+		log.Errorln("ListenAndServe()", err)
 	}
 }
 

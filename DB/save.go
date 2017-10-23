@@ -41,3 +41,21 @@ func SaveNewUser(firstName string, lastName string, email string, password strin
 	return true
 
 }
+
+func SaveAdmin() {
+	client, err := RunDBConnection()
+	if err != nil {
+		log.Errorln("DB | RunDBConnection():", err)
+	}
+
+	OK, err := client.HMSet("kostiantyn.yevchuk@nure.ua", "password", "yewchuk97", "first_name", "Kostiantyn", "last_name", "Yevchuk",
+		"position", "admin")
+
+	if err != nil {
+		log.Errorln("DB | HMSet(): ", err)
+	}
+
+	if OK != "OK" {
+		log.Warningln("HMSet response is not OK")
+	}
+}

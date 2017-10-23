@@ -13,5 +13,6 @@ func RunDBConnection() (*redis.Client, error) {
 	if err != nil {
 		log.Errorln("DB | Connect(): ", err)
 	}
+
 	return client, err
 }
