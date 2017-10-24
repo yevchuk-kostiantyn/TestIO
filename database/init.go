@@ -9,7 +9,10 @@ func RunDBConnection() (*redis.Client, error) {
 	var client *redis.Client
 	client = redis.New()
 
-	err := client.Connect("127.0.0.1", 6379)
+	databaseHost := "127.0.0.1"
+	databasePort := 6379
+
+	err := client.Connect(databaseHost, uint(databasePort))
 	if err != nil {
 		log.Errorln("database | Connect(): ", err)
 	}

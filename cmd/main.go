@@ -10,5 +10,9 @@ func main() {
 	log.Infoln("Welcome to TestIO App log!")
 
 	database.SaveAdmin()
-	rest.RunDynamicServer()
+	err := rest.RunDynamicServer()
+	if err != nil {
+		log.Errorln("RunDynamicServer()", err)
+		return
+	}
 }

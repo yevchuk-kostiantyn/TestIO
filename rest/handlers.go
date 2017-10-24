@@ -8,9 +8,10 @@ import (
 	"github.com/yevchuk-kostiantyn/TestIO"
 	"encoding/json"
 	"github.com/yevchuk-kostiantyn/TestIO/database"
+	"os"
 )
 
-func RunDynamicServer() {
+func RunDynamicServer() error {
 	log.Info("Dynamic Server was started!")
 
 	router := mux.NewRouter()
@@ -18,12 +19,16 @@ func RunDynamicServer() {
 	router.HandleFunc("/login", checkEnteredCredentials).Methods("PATCH")
 	router.HandleFunc("/signup", getNewUser).Methods("PATCH")
 
-	router.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("/home/kostiantyn/GolangProjects/src/github.com/yevchuk-kostiantyn/TestIO/view/"))))
+	GOPATH := os.Getenv("GOPATH")
+
+	router.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir(GOPATH + "/src/github.com/yevchuk-kostiantyn/TestIO/view/"))))
 
 	err := http.ListenAndServe(":1997", router)
 	if err != nil {
 		log.Errorln("ListenAndServe()", err)
+		return err
 	}
+	return nil
 }
 
 func checkEnteredCredentials(w http.ResponseWriter, r *http.Request) {
