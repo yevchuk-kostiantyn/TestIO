@@ -1,4 +1,4 @@
-package DB
+package database
 
 import (
 	log "github.com/sirupsen/logrus"
@@ -8,12 +8,12 @@ import (
 func UserExists(entered_username string) bool {
 	client, err := RunDBConnection()
 	if err != nil {
-		log.Errorln("DB | RunDBConnection():", err)
+		log.Errorln("database | RunDBConnection():", err)
 	}
 
 	user_exists, err := client.Exists(entered_username)
 	if err != nil {
-		log.Errorln("DB | Exists():", err)
+		log.Errorln("database | Exists():", err)
 	}
 
 	return user_exists
@@ -22,12 +22,12 @@ func UserExists(entered_username string) bool {
 func IsPasswordCorrect(entered_username string, entered_password string) bool {
 	client, err := RunDBConnection()
 	if err != nil {
-		log.Errorln("DB | RunDBConnection():", err)
+		log.Errorln("database | RunDBConnection():", err)
 	}
 
 	correct_password, err := client.HMGet(entered_username, "password")
 	if err != nil {
-		log.Errorln("DB | HMGet():", err)
+		log.Errorln("database | HMGet():", err)
 	}
 
 	if entered_password == strings.Join(correct_password, "") {
@@ -40,12 +40,12 @@ func IsPasswordCorrect(entered_username string, entered_password string) bool {
 func GetUserPosition(entered_username string) string {
 	client, err := RunDBConnection()
 	if err != nil {
-		log.Errorln("DB | RunDBConnection():", err)
+		log.Errorln("database | RunDBConnection():", err)
 	}
 
 	position, err := client.HMGet(entered_username, "position")
 	if err != nil {
-		log.Errorln("DB | HMGet():", err)
+		log.Errorln("database | HMGet():", err)
 	}
 
 	return strings.Join(position, "")

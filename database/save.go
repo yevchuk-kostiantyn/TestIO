@@ -1,11 +1,11 @@
-package DB
+package database
 
 import log "github.com/sirupsen/logrus"
 
 func SaveNewUser(firstName string, lastName string, email string, password string, position string) bool {
 	client, err := RunDBConnection()
 	if err != nil {
-		log.Errorln("DB | RunDBConnection():", err)
+		log.Errorln("database | RunDBConnection():", err)
 		return false
 	}
 
@@ -15,7 +15,7 @@ func SaveNewUser(firstName string, lastName string, email string, password strin
 		"position", position)
 
 	if err != nil {
-		log.Errorln("DB | HMSet(): ", err)
+		log.Errorln("database | HMSet(): ", err)
 		return false
 	}
 
@@ -26,7 +26,7 @@ func SaveNewUser(firstName string, lastName string, email string, password strin
 
 	result, err := client.SAdd(position, key)
 	if err != nil {
-		log.Errorln("DB | SAdd()")
+		log.Errorln("database | SAdd()")
 		return false
 	}
 
@@ -42,20 +42,24 @@ func SaveNewUser(firstName string, lastName string, email string, password strin
 
 }
 
-func SaveAdmin() {
+func SaveAdmin() bool {
 	client, err := RunDBConnection()
 	if err != nil {
-		log.Errorln("DB | RunDBConnection():", err)
+		log.Errorln("database | RunDBConnection():", err)
+		return false
 	}
 
 	OK, err := client.HMSet("kostiantyn.yevchuk@nure.ua", "password", "yewchuk97", "first_name", "Kostiantyn", "last_name", "Yevchuk",
 		"position", "admin")
 
 	if err != nil {
-		log.Errorln("DB | HMSet(): ", err)
+		log.Errorln("database | HMSet(): ", err)
+		return false
 	}
 
 	if OK != "OK" {
 		log.Warningln("HMSet response is not OK")
+		return false
 	}
+	return true
 }

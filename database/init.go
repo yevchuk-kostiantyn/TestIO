@@ -1,4 +1,4 @@
-package DB
+package database
 
 import (
 	"menteslibres.net/gosexy/redis"
@@ -11,8 +11,19 @@ func RunDBConnection() (*redis.Client, error) {
 
 	err := client.Connect("127.0.0.1", 6379)
 	if err != nil {
-		log.Errorln("DB | Connect(): ", err)
+		log.Errorln("database | Connect(): ", err)
 	}
 
 	return client, err
+}
+
+func Flushall() error {
+	client, _ := RunDBConnection()
+	_, err := client.FlushAll()
+
+	if err != nil {
+		return err
+	} else {
+		return nil
+	}
 }

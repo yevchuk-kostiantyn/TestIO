@@ -7,7 +7,7 @@ import (
 	"net/smtp"
 	"github.com/yevchuk-kostiantyn/TestIO"
 	"encoding/json"
-	"github.com/yevchuk-kostiantyn/TestIO/DB"
+	"github.com/yevchuk-kostiantyn/TestIO/database"
 )
 
 func RunDynamicServer() {
@@ -42,12 +42,12 @@ func checkEnteredCredentials(w http.ResponseWriter, r *http.Request) {
 	log.Println("Username:", entered_username)
 	log.Println("Password:", entered_password)
 
-	user_exists := DB.UserExists(entered_username)
-	is_password_correct := DB.IsPasswordCorrect(entered_username, entered_password)
+	user_exists := database.UserExists(entered_username)
+	is_password_correct := database.IsPasswordCorrect(entered_username, entered_password)
 
 	if user_exists && is_password_correct {
 		var response TestIO.Response
-		response.Position = DB.GetUserPosition(entered_username)
+		response.Position = database.GetUserPosition(entered_username)
 		log.Println("Position:", response.Position)
 		err := json.NewEncoder(w).Encode(response.Position)
 		if err != nil {
@@ -92,12 +92,12 @@ func getNewUser(_ http.ResponseWriter, r *http.Request) {
 		log.Println("Password:", password)
 		log.Println("Position:", position)
 
-		successful_save := DB.SaveNewUser(firstName, lastName, email, password, position)
+		successful_save := database.SaveNewUser(firstName, lastName, email, password, position)
 
 		if successful_save {
 			sendEmail(firstName, lastName, email, position)
 		} else {
-			log.Println("Save to DB was not successful")
+			log.Println("Save to database was not successful")
 		}
 	}
 }
