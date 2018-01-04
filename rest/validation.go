@@ -1,8 +1,8 @@
 package rest
 
 import (
-	"regexp"
 	log "github.com/sirupsen/logrus"
+	"regexp"
 )
 
 func ValidateInfo(info string) bool {

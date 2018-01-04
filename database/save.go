@@ -30,7 +30,7 @@ func SaveNewUser(firstName string, lastName string, email string, password strin
 		return false
 	}
 
-	if result == 1{
+	if result == 1 {
 		return true
 	} else if result == 0 {
 		log.Warningln("The email already exists")

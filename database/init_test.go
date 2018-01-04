@@ -1,9 +1,9 @@
 package database
 
 import (
-	"testing"
-	"menteslibres.net/gosexy/redis"
 	. "github.com/smartystreets/goconvey/convey"
+	"menteslibres.net/gosexy/redis"
+	"testing"
 )
 
 func TestRunDBConnection(t *testing.T) {

@@ -3,7 +3,10 @@ package rest
 import "testing"
 
 func TestValidateInfo(t *testing.T) {
-	var tests = []struct{ isValid bool; info string }{
+	var tests = []struct {
+		isValid bool
+		info    string
+	}{
 		{true, "Hello World"},
 		{true, "Michael"},
 		{false, "_"},
@@ -12,9 +15,8 @@ func TestValidateInfo(t *testing.T) {
 		{true, "Kyrie Irving"},
 	}
 
-	for _, test := range tests{
-		if isValid := ValidateInfo(test.info);
-			isValid != test.isValid {
+	for _, test := range tests {
+		if isValid := ValidateInfo(test.info); isValid != test.isValid {
 			t.Fatalf("ValidateInfo(%q) = %q, want %q.", test.info,
 				isValid, test.isValid)
 		}
@@ -22,7 +24,10 @@ func TestValidateInfo(t *testing.T) {
 }
 
 func TestValidateEmail(t *testing.T) {
-	var tests = []struct{ isValid bool; email string }{
+	var tests = []struct {
+		isValid bool
+		email   string
+	}{
 		{true, "email@domain.com"},
 		{true, "firstname.lastname@domain.com"},
 		{true, "email@subdomain.domain.com"},
@@ -45,9 +50,8 @@ func TestValidateEmail(t *testing.T) {
 		{false, "email@domain"},
 	}
 
-	for _, test := range tests{
-		if isValid := ValidateEmail(test.email);
-			isValid != test.isValid {
+	for _, test := range tests {
+		if isValid := ValidateEmail(test.email); isValid != test.isValid {
 			t.Fatalf("ValidateEmail(%q) = %q, want %q.", test.email,
 				isValid, test.isValid)
 		}
@@ -55,7 +59,10 @@ func TestValidateEmail(t *testing.T) {
 }
 
 func TestValidatePassword(t *testing.T) {
-	var tests = []struct{ isValid bool; password string }{
+	var tests = []struct {
+		isValid  bool
+		password string
+	}{
 		{true, "HelloWorld"},
 		{true, "Michael"},
 		{false, "_"},
@@ -64,9 +71,8 @@ func TestValidatePassword(t *testing.T) {
 		{true, "KyrieIrving"},
 	}
 
-	for _, test := range tests{
-		if isValid := ValidatePassword(test.password);
-			isValid != test.isValid {
+	for _, test := range tests {
+		if isValid := ValidatePassword(test.password); isValid != test.isValid {
 			t.Fatalf("ValidatePassword(%q) = %q, want %q.", test.password,
 				isValid, test.isValid)
 		}

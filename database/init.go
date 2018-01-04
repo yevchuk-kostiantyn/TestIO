@@ -1,8 +1,8 @@
 package database
 
 import (
-	"menteslibres.net/gosexy/redis"
 	log "github.com/sirupsen/logrus"
+	"menteslibres.net/gosexy/redis"
 )
 
 func RunDBConnection() (*redis.Client, error) {

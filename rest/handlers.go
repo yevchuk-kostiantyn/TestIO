@@ -1,13 +1,13 @@
 package rest
 
 import (
-	log "github.com/sirupsen/logrus"
+	"encoding/json"
 	"github.com/gorilla/mux"
+	log "github.com/sirupsen/logrus"
+	"github.com/yevchuk-kostiantyn/TestIO/database"
+	"github.com/yevchuk-kostiantyn/TestIO/models"
 	"net/http"
 	"net/smtp"
-	"github.com/yevchuk-kostiantyn/TestIO"
-	"encoding/json"
-	"github.com/yevchuk-kostiantyn/TestIO/database"
 	"os"
 )
 
@@ -20,8 +20,9 @@ func RunDynamicServer() error {
 	router.HandleFunc("/signup", getNewUser).Methods("PATCH")
 
 	GOPATH := os.Getenv("GOPATH")
+	viewPath := "/src/github.com/yevchuk-kostiantyn/TestIO/view/"
 
-	router.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir(GOPATH + "/src/github.com/yevchuk-kostiantyn/TestIO/view/"))))
+	router.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir(GOPATH+viewPath))))
 
 	err := http.ListenAndServe(":1997", router)
 	if err != nil {
@@ -32,7 +33,7 @@ func RunDynamicServer() error {
 }
 
 func checkEnteredCredentials(w http.ResponseWriter, r *http.Request) {
-	var credentials TestIO.LoginCredentials
+	var credentials models.LoginCredentials
 
 	err := json.NewDecoder(r.Body).Decode(&credentials)
 
@@ -43,7 +44,6 @@ func checkEnteredCredentials(w http.ResponseWriter, r *http.Request) {
 	entered_username := credentials.Username
 	entered_password := credentials.Password
 
-
 	log.Println("Username:", entered_username)
 	log.Println("Password:", entered_password)
 
@@ -51,7 +51,7 @@ func checkEnteredCredentials(w http.ResponseWriter, r *http.Request) {
 	is_password_correct := database.IsPasswordCorrect(entered_username, entered_password)
 
 	if user_exists && is_password_correct {
-		var response TestIO.Response
+		var response models.Response
 		response.Position = database.GetUserPosition(entered_username)
 		log.Println("Position:", response.Position)
 		err := json.NewEncoder(w).Encode(response.Position)
@@ -66,7 +66,7 @@ func checkEnteredCredentials(w http.ResponseWriter, r *http.Request) {
 }
 
 func getNewUser(_ http.ResponseWriter, r *http.Request) {
-	var newUserInfo TestIO.NewUser
+	var newUserInfo models.NewUser
 
 	err := json.NewDecoder(r.Body).Decode(&newUserInfo)
 
@@ -111,13 +111,13 @@ func sendEmail(firstName string, lastName string, email string, position string)
 	from := "kostiantyn.yevchuk@nure.ua"
 	admin_password := "yewchuk97"
 
-	body := "Dear " + firstName +" " + lastName +"," + "\n" + "You were successfully signed up on" +
+	body := "Dear " + firstName + " " + lastName + "," + "\n" + "You were successfully signed up on" +
 		" TestIO as " + position + "." + "\n" + "To login enter the email and password" +
 		" you used." + "\n" + "Thank you!" + "\n" + "Have a great day!" + "\n" + "TestIO Team"
 
 	msg := "From: " + from + "\r\n" +
-			"To: " + email + "\r\n" +
-			"Subject: Your messages subject" + "\r\n\r\n" + body + "\r\n"
+		"To: " + email + "\r\n" +
+		"Subject: Your messages subject" + "\r\n\r\n" + body + "\r\n"
 	err := smtp.SendMail("smtp.gmail.com:587", smtp.PlainAuth("", from, admin_password, "smtp.gmail.com"), from, []string{email}, []byte(msg))
 	if err != nil {
 		log.Errorf("Error: %s", err)
